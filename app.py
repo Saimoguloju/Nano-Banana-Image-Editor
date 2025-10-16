@@ -26,8 +26,7 @@ if st.button("Generate Style"):
     if fabric_image and model_image and prompt:
         st.write("Generating your styled outfit...")
         
-        # Prepend garment type to the prompt
-        full_prompt = f"{garment_type}: {prompt}"
+        full_prompt = f"Create a high-resolution, photorealistic image of a model wearing a {garment_type}. The garment should be made from the provided fabric image. {prompt}. The model's face in the output image must be the same as in the provided model image. The final image should be clear, professionally lit, and look like a fashion photograph."
 
         # Call the Gemini API function
         generated_image = gemini_api.generate_image(
