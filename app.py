@@ -42,6 +42,14 @@ if st.button("Generate Style"):
 
             st.image(generated_image, caption="Your AI Styled Outfit", width='stretch')
 
+            generated_image.seek(0)
+            st.download_button(
+                label="Download Image",
+                data=generated_image,
+                file_name="styled_outfit.png",
+                mime="image/png"
+            )
+
         else:
 
             st.error("Failed to generate image. Please check the console for errors.")

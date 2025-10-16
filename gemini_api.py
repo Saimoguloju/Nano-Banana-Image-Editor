@@ -21,15 +21,20 @@ else:
 
 def generate_image(fabric_image, model_image, prompt):
     """
-    Generates an image using the Gemini 1.5 Flash model with image generation capabilities.
-    This version is simplified for debugging and only uses a text prompt.
+    Generates an image using the Gemini 2.5 Flash Image model with image generation capabilities.
+    This version uses a text prompt and a fabric image to influence the color.
     """
     try:
         # The model to use for image generation
         model = genai.GenerativeModel('gemini-2.5-flash-image')
 
-        # Call the model to generate content from the text prompt
-        response = model.generate_content(prompt)
+        fabric_image_pil = PIL.Image.open(fabric_image)
+
+        # The prompt to send to the model
+        full_prompt = f"{prompt}. The color of the output should be the same as the provided fabric image."
+
+        # Call the model to generate content from the text prompt and fabric image
+        response = model.generate_content([full_prompt, fabric_image_pil])
 
 
 
