@@ -17,39 +17,40 @@ if GEMINI_API_KEY:
 else:
     print("Gemini API key not found. Please set it in the .env file.")
 
-def generate_image(fabric_image, model_image, garment_type, drape_style, accessories, view_type):
+
+
+def generate_image(fabric_image, model_image, prompt):
     """
-    Generates an image using the Gemini 2.5 Flash model with image generation capabilities.
+    Generates an image using the Gemini 1.5 Flash model with image generation capabilities.
+    This version is simplified for debugging and only uses a text prompt.
     """
     try:
         # The model to use for image generation
         model = genai.GenerativeModel('gemini-2.5-flash-image')
 
-        # Open the uploaded images
-        fabric_img = PIL.Image.open(fabric_image)
-        model_img = PIL.Image.open(model_image)
+        # Call the model to generate content from the text prompt
+        response = model.generate_content(prompt)
 
-        # The prompt to send to the model
-        prompt = f"Apply this uploaded fabric to the model. Create a realistic {garment_type} with {drape_style}, include {accessories}, show {view_type}."
 
-        # The content to send to the model, including the prompt and the images
-        contents = [prompt, fabric_img, model_img]
-
-        # Call the model to generate content
-        response = model.generate_content(contents)
 
         # The response for this model should contain image data.
-        # This part of the code assumes the response structure for image generation.
-        # It might need adjustment based on the actual API response.
-        if response.parts:
-            # Assuming the first part is the generated image
-            image_data = response.parts[0].inline_data.data
-            return io.BytesIO(image_data)
-        else:
-            print("Error: No image data found in the response.")
-            return None
+        if response.candidates and response.candidates[0].content and response.candidates[0].content.parts:
+            for part in response.candidates[0].content.parts:
+                if part.inline_data:
+                    image_data = part.inline_data.data
+                    return io.BytesIO(image_data)
 
-    except Exception as e:
-        print(f"An error occurred during image generation: {e}")
+        # If no image, maybe there is text? Print it for debugging.
+        if hasattr(response, 'text') and response.text:
+            print(f"No image data in response. Response: {response.text}")
+        else:
+            print("No image data in response and no text either.")
         return None
 
+
+
+    except Exception as e:
+
+        print(f"An error occurred during image generation: {e}")
+
+        return None
