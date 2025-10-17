@@ -21,7 +21,7 @@ else:
 
 def generate_image(fabric_image, model_image, prompt):
     """
-    Generates an image using the Gemini 1.5 Flash model.
+    Generates an image using the Gemini 2.5 Flash Image model.
     """
     try:
         model = genai.GenerativeModel('gemini-2.5-flash-image')
